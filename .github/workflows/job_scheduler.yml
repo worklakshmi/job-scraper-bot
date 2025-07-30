@@ -1,0 +1,30 @@
+name: Daily Job Scraper
+
+on:
+  schedule:
+    # Every day at 3:30 AM and 6:30 AM UTC (9:00 AM, 12:00 PM IST)
+    - cron: '30 3,6 * * *'
+  workflow_dispatch:  # Optional: allows you to run manually from GitHub UI
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run script
+      run: python job_scraper_no_repeat.py
+      env:
+        EMAIL: ${{ secrets.EMAIL }}
+        APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
